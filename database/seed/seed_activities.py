@@ -75,3 +75,8 @@ activities = [
     },
 ]
 
+for i in activities:
+    stmt = (
+        insert(activity).
+        values(id=i["id"], title=i["title"], content=i["content"], category=i["category"], prompt=i["prompt"])
+    )
