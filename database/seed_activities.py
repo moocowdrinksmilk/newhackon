@@ -1,6 +1,15 @@
+# coding: utf-8
 from sqlalchemy import insert
+import activityDAO
 
-engine = create_engine('sqlite:///hackon.db')
+# engine = create_engine('sqlite:///hackon.db')
+
+from sqlalchemy.orm import Session
+from database import engine, Activity
+from multipledispatch import dispatch
+
+with Session(engine) as session:
+    
 
 activities = [
     {
@@ -12,42 +21,43 @@ activities = [
     },
     {
         "id": 2,
-        "title": "MEDITATE",
-        "content": "Meditation is a simple practice available to all, which can reduce stress, increase calmness and clarity and promote happiness. Learning how to meditate is straightforward, and the benefits can come quickly. https://www.mindful.org/how-to-meditate/"
-        "category": "solo",
-        "prompt": "How did you feel after the activity? What causes you undue stress?"
-    },
-    {
-        "id": 3,
-        "title": "HAIKU",
-        "content": "Haiku is a form of Japanese poetry made of short, unrhymed lines that evoke natural imagery. Haiku can come in a variety of different formats of short verses, though the most common is a three-line poem with a 5-7-5 syllable pattern.\n Writing haiku might seem simple: or that all it takes to make one is to hit a certain syllable count. To gain a richer understanding of this ancient art form, and even try your hand at writing a few, read more about its deep history and origins below.\n https://www.masterclass.com/articles/how-to-write-a-haiku-in-4-easy-steps",
-        "category": "solo",
-        "prompt": "What do we often forget to appreciate in life? What made you smile and laugh recently?"
-    },
-    {
-        "id": 4,
         "title": "LEARN ANOTHER LANGUAGE",
-        "content": "“Language is the road map of a culture.  It tells you where its people come from and where they are going” ‒ Rita Mae Brown\n Taking the time to learn a new language can help you appreciate another culture and greatly improve the quality of connections you can make with others. Learn some simple words and phrases of that language you always wanted to learn below!\n https://www.duolingo.com/",
+        "content": 'Taking the time to learn a new language can help you appreciate another culture and greatly improve the quality of connections you can make with others. Learn some simple words and phrases of that language you always wanted to learn below!',
         "category": "solo",
         "prompt": "How do we respond to differences around us? How can we be more inclusive and accepting of others?"
     },
     {
+        "id": 3,
+        "title": "MEDITATE",
+        "content": "Meditation is a simple practice available to all, which can reduce stress, increase calmness and clarity and promote happiness. Learning how to meditate is straightforward, and the benefits can come quickly. https://www.mindful.org/how-to-meditate/",
+        "category": "solo",
+        "prompt": "How did you feel after the activity? What causes you undue stress?"
+    },
+    {
+        "id": 4,
+        "title": "HAIKU_SOLO",
+        "content": "Haiku is a form of Japanese poetry made of short, unrhymed lines that evoke natural imagery. Haiku can come in a variety of different formats of short verses, though the most common is a three-line poem with a 5-7-5 syllable pattern.\n Writing haiku might seem simple: or that all it takes to make one is to hit a certain syllable count. To gain a richer understanding of this ancient art form, and even try your hand at writing a few, read more about its deep history and origins below.\n https://www.masterclass.com/articles/how-to-write-a-haiku-in-4-easy-steps",
+        "category": "solo",
+        "prompt": "What do we often forget to appreciate in life? What made you smile and laugh recently?"
+    },
+    
+    {
         "id": 5,
         "title": "WRITE A LETTER TO A YOUR FUTURE SELF",
-        "content": "Is there anything you want to always remember? Why would you write a letter to your future self? Does it seem silly and childish? Actually, this exercise can bring much value to your life. Whether you’re hoping to achieve specific goals, follow up on bucket list items, or give words of affirmation, your future self will be grateful to receive a letter no matter what. \nhttps://www.futureme.org/",
+        "content": "https://www.futureme.org/",
         "category": "solo",
-        "prompt": "What choices have you made in the last five years that you’d thank yourself for making?"
+        "prompt": "What choices have you made in the last 5 years that would make yourself thankful"
     },
     {
         "id": 6,
         "title": "DESERT ISLAND",
         "content": "Your cruise to the Bahamas sank and you were stranded on a deserted island. On your way out of the ship, you are able to grab 3 of the following items. The items available are: \n 1) A bag of fruit and vegetable seeds \n2) A pocket knife \n3) A 100 ft rope \n4) A bedsheet \n5) A bucket \n6) 2 liters of kerosene \n7 A pen and paper  \n\n Which 3 items did you choose and why? How would they help you survive and escape the island?",
         "category": "solo",
-        "prompt": "What’s something enjoyable you get to experience every day that you’ve come to take for granted?"
+        "prompt": "What is something enjoyable that you do everyday that you now feel like you take for granted"
     },
     {
         "id": 7,
-        "title": "HAIKU",
+        "title": "HAIKU_GROUP",
         "content": "Haiku is a form of Japanese poetry made of short, unrhymed lines that evoke natural imagery. Haiku can come in a variety of different formats of short verses, though the most common is a three-line poem with a 5-7-5 syllable pattern. Writing haiku might seem simple: or that all it takes to make one is to hit a certain syllable count. To gain a richer understanding of this ancient art form, and even try your hand at writing a few, read more about its deep history and origins below. \nhttps://www.masterclass.com/articles/how-to-write-a-haiku-in-4-easy-steps",
         "category": "solo",
         "prompt": "Share your haiku and what inspiration you drew! What have you seen in nature recently that made you feel happy, peaceful, or free?"
@@ -76,7 +86,4 @@ activities = [
 ]
 
 for i in activities:
-    stmt = (
-        insert(activity).
-        values(id=i["id"], title=i["title"], content=i["content"], category=i["category"], prompt=i["prompt"])
-    )
+    activityDAO.insert_activity(i["title"], i["content"], i["category"], i["prompt"])
