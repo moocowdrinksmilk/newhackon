@@ -1,7 +1,7 @@
-from sessionStart import session
-from database import engine, GroupActivity
-from activityDAO import *
-from groupDAO import *
+from database.sessionStart import session
+from database.database import engine, GroupActivity
+from database.activityDAO import *
+from database.groupDAO import *
 
 def get_group_activity(group,activity):
     return session.query(GroupActivity).filter(GroupActivity.group == group, GroupActivity.activity == activity).first()

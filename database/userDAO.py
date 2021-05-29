@@ -1,5 +1,5 @@
-from sessionStart import session
-from database import engine, User
+from database.sessionStart import session
+from database.database import engine, User
 
 def get_user(chat_id):
     return session.query(User).get(chat_id)
@@ -17,3 +17,5 @@ def edit_set_time(chat_id, new_set_time):
     session.query(User).filter(chat_id == chat_id).update({User.set_time: new_set_time})
     session.commit()
         
+def get_all_users():
+    return session.query(User).all()
