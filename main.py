@@ -1,4 +1,5 @@
 import telegram
+from telegram.utils.helpers import effective_message_type
 import config
 
 bot = telegram.Bot(token=config.TOKEN) #Replace TOKEN with your token string
@@ -13,6 +14,7 @@ dispatcher = updater.dispatcher
 
 def hello(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text='Hello, World', reply_markup=main_menu_keyboard())
+    print(update.effective_chat.id)
 
 def main_menu_keyboard():
   keyboard = [[InlineKeyboardButton('Menu 1', callback_data='m1')],

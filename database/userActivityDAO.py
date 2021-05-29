@@ -1,7 +1,7 @@
-from sessionStart import session
-from database import engine, UserActivity
-from activityDAO import *
-from userDAO import *
+from database.sessionStart import session
+from database.database import engine, UserActivity
+from database.activityDAO import *
+from database.userDAO import *
 
 def get_user_activity(user,activity):
     return session.query(UserActivity).filter(UserActivity.user == user, UserActivity.activity == activity).first()

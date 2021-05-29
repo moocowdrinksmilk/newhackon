@@ -1,5 +1,5 @@
-from sessionStart import session
-from database import engine, Activity
+from database.sessionStart import session
+from database.database import engine, Activity
 
 
 def get_activity_by_id(id):
@@ -21,3 +21,6 @@ def edit_category(title, new_category):
 
 def edit_prompt(title, new_prompt):
     session.query(Activity).filter(title == title).update({Activity.prompt: new_prompt})
+
+def get_all_activities():
+    return session.query(Activity).all()
