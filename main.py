@@ -42,3 +42,14 @@ dispatcher.add_handler(CallbackQueryHandler(first_menu, pattern='m1'))
 
 
 updater.start_polling()
+
+
+
+
+from src.users import *
+
+user()
+
+from src import users
+
+users.user()
