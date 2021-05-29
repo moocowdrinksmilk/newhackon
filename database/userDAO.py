@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from database import engine, User, Group, Activity, UserActivity, GroupActivity
+from database import engine, User
 from multipledispatch import dispatch
 
 with Session(engine) as session:
