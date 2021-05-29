@@ -6,7 +6,8 @@ from telegram.ext import (
     CallbackContext,
 )
 
-CHOOSING_START = range(1)
+CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE, CHOOSING_START = range(7)
+
 
 start_keyboard = [
     ['Help!', 'Set TRYVE time'],
@@ -28,7 +29,7 @@ def help(update: Update, context: CallbackContext) -> int:
         "Get Started\n"
         "/help - ask for help!\n"
         "/settime - set your daily TRYVE time\n"
-        "/stop - stop receiving daily TRYVE activities"
+        "/stop - stop receiving daily TRYVE activities\n"
     )
 
 def stop(update: Update, context: CallbackContext) -> int:

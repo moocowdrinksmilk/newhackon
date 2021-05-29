@@ -18,7 +18,7 @@ import config
 from typing import Dict
 import registration
 import times
-import menu
+import menus
 
 from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
 from telegram.ext import (
@@ -50,10 +50,10 @@ def main() -> None:
     # Add conversation handler with the states CHOOSING, TYPING_CHOICE and TYPING_REPLY
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('register', registration.register), 
-        CommandHandler('start', menu.start),
+        CommandHandler('start', menus.start),
         CommandHandler('settime', times.settime),
-        CommandHandler('help', menu.help),
-        CommandHandler('stop', menu.stop)],
+        CommandHandler('help', menus.help),
+        CommandHandler('stop', menus.stop)],
         states={
             CHOOSING: [
                 MessageHandler(
@@ -91,13 +91,13 @@ def main() -> None:
             ],
             CHOOSING_START: [
                 MessageHandler(
-                    Filters.regex('^Help!$'), menu.help
+                    Filters.regex('^Help!$'), menus.help
                 ), 
                 MessageHandler(
                     Filters.regex('^Set TRYVE time$'), times.settime
                 ),
                 MessageHandler(
-                    Filters.regex('^Stop receiving suggestions$'), menu.stop
+                    Filters.regex('^Stop receiving suggestions$'), menus.stop
                 )
             ]
         },

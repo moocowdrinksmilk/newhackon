@@ -12,7 +12,7 @@ from telegram.ext import (
     CallbackContext,
 )
 
-CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE = range(6)
+CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE, CHOOSING_START = range(7)
 
 register_keyboard = [
     ['Age', 'Favourite colour'],
