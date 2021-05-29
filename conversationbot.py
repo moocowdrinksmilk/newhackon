@@ -18,6 +18,7 @@ import config
 from typing import Dict
 import registration
 import times
+import menu
 
 from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
 from telegram.ext import (
@@ -36,9 +37,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE = range(6)
-
-
+CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE, CHOOSING_START = range(7)
 
 def main() -> None:
     """Run the bot."""
@@ -51,7 +50,10 @@ def main() -> None:
     # Add conversation handler with the states CHOOSING, TYPING_CHOICE and TYPING_REPLY
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('register', registration.register), 
-                      CommandHandler('start', times.start)],
+        CommandHandler('start', menu.start),
+        CommandHandler('settime', times.settime),
+        CommandHandler('help', menu.help),
+        CommandHandler('stop', menu.stop)],
         states={
             CHOOSING: [
                 MessageHandler(
@@ -84,7 +86,18 @@ def main() -> None:
             ],
             TIME_DONE: [
                 MessageHandler(
-                  Filters.regex('^Done'), times.start
+                  Filters.regex('^Done$'), times.received_time
+                )
+            ],
+            CHOOSING_START: [
+                MessageHandler(
+                    Filters.regex('^Help!$'), menu.help
+                ), 
+                MessageHandler(
+                    Filters.regex('^Set TRYVE time$'), times.settime
+                ),
+                MessageHandler(
+                    Filters.regex('^Stop receiving suggestions$'), menu.stop
                 )
             ]
         },

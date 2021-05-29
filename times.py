@@ -14,18 +14,18 @@ from telegram.ext import (
 
 CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE = range(6)
 
-start_keyboard = [
+settime_keyboard = [
     ['Time', 'Duration'],
     ['Done'],
 ]
 
-start_markup = ReplyKeyboardMarkup(start_keyboard, one_time_keyboard=True)
+settime_markup = ReplyKeyboardMarkup(settime_keyboard, one_time_keyboard=True)
 
-def start(update: Update, context: CallbackContext) -> int:
+def settime(update: Update, context: CallbackContext) -> int:
     """Start the conversation and ask user for input."""
     update.message.reply_text(
         "Hi! Welcome to TRYVE. What time would you like to TRYVE?",
-        reply_markup=start_markup,
+        reply_markup=settime_markup,
     )
 
     return CHOOSING_TIME
