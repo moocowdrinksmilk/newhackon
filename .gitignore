@@ -29,4 +29,6 @@ venv.bak/
 # vscode
 .vscode/
 
+#data
+hackon.db
 **/.DS_Store
