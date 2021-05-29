@@ -17,6 +17,7 @@ import logging
 import config
 from typing import Dict
 import registration
+import times
 
 from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
 from telegram.ext import (
@@ -37,46 +38,6 @@ logger = logging.getLogger(__name__)
 
 CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE = range(6)
 
-start_keyboard = [
-    ['Time', 'Duration'],
-    ['Done'],
-]
-
-start_markup = ReplyKeyboardMarkup(start_keyboard, one_time_keyboard=True)
-
-
-def start(update: Update, context: CallbackContext) -> int:
-    """Start the conversation and ask user for input."""
-    update.message.reply_text(
-        "Hi! Welcome to TRYVE. What time would you like to TRYVE?",
-        reply_markup=start_markup,
-    )
-
-    return CHOOSING_TIME
-
-def time_choice(update: Update, context: CallbackContext) -> int:
-    update.message.reply_text(f'What time?')
-    text = update.message.text
-    context.user_data['time'] = text
-
-    return TIME_CHOICE
-
-def duration_choice(update: Update, context: CallbackContext) -> int:
-    update.message.reply_text('How long? The recommended duration is 25 minutes')
-    text = update.message.text
-    context.user_data['duration'] = text
-
-    return TIME_CHOICE
-  
-def received_time(update: Update, context: CallbackContext) -> int:
-    """Store info provided by user and ask for the next category."""
-    user_data = context.user_data
-    text = update.message.text
-    user_data['time'] = text
-
-    update.message.reply_text(
-        f"Neat! We will suggest the activities at {user_data['time']}"    )
-    return ConversationHandler.END
 
 
 def main() -> None:
@@ -90,7 +51,7 @@ def main() -> None:
     # Add conversation handler with the states CHOOSING, TYPING_CHOICE and TYPING_REPLY
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('register', registration.register), 
-                      CommandHandler('start', start)],
+                      CommandHandler('start', times.start)],
         states={
             CHOOSING: [
                 MessageHandler(
@@ -110,20 +71,20 @@ def main() -> None:
             ],
             CHOOSING_TIME: [
                 MessageHandler(
-                    Filters.regex('^Time$'), time_choice
+                    Filters.regex('^Time$'), times.time_choice
                 ),
                 MessageHandler(
-                    Filters.regex('^Duration$'), duration_choice
+                    Filters.regex('^Duration$'), times.duration_choice
                 )
             ],
             TIME_CHOICE: [
                 MessageHandler(
-                    Filters.text & ~(Filters.command | Filters.regex('^Done$')), received_time
+                    Filters.text & ~(Filters.command | Filters.regex('^Done$')), times.received_time
                 )
             ],
             TIME_DONE: [
                 MessageHandler(
-                  Filters.regex('^Done'), start
+                  Filters.regex('^Done'), times.start
                 )
             ]
         },
