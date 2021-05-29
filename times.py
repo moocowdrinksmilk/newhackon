@@ -2,11 +2,14 @@ import logging
 import config
 from typing import Dict
 import pprint
+<<<<<<< HEAD
 import datetime
 <<<<<<< HEAD
 from database import userDAO
 =======
 >>>>>>> 5691227 (Add user_id)
+=======
+>>>>>>> ed9b88e (Add read user_id)
 
 from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
 from telegram.ext import (
@@ -37,7 +40,6 @@ def settime(update: Update, context: CallbackContext) -> int:
         print('new user')
         username = update.message.chat.username
         userDAO.insert_user(user_id, username, None)
-
     update.message.reply_text(
         f"Hi {user.username}! Welcome to TRYVE. What time would you like to TRYVE?",
         reply_markup=settime_markup,
