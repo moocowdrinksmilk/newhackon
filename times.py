@@ -3,7 +3,10 @@ import config
 from typing import Dict
 import pprint
 import datetime
+<<<<<<< HEAD
 from database import userDAO
+=======
+>>>>>>> 5691227 (Add user_id)
 
 from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
 from telegram.ext import (
