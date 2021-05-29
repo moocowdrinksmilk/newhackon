@@ -1,5 +1,5 @@
 from sessionStart import session
-from database import engine, User
+from database import engine, Group
 
 def get_group(chat_id):
     return session.query(Group).get(chat_id)
