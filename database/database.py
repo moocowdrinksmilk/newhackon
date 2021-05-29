@@ -23,6 +23,7 @@ class GroupActivity(Base):
     group_id = Column(Integer, ForeignKey('group.chat_id'), primary_key = True)
     activity_id = Column(Integer, ForeignKey('activity.id'), primary_key = True)
     reflection = Column(Text)
+    score = Column(Float)
     activity = relationship("Activity", back_populates= 'groups')
     group = relationship("Group", back_populates="activities")
 
@@ -45,7 +46,7 @@ class Group(Base):
     activities = relationship("GroupActivity", back_populates="group")
     
     def __repr__(self):
-        return f"Group(id={self.chat_id!r}"
+        return f"Group(id={self.chat_id!r})"
 
 class Activity(Base):
     __tablename__ = 'activity'
