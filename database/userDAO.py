@@ -11,7 +11,9 @@ def insert_user(chat_id, username, set_time = None):
 
 def edit_username(chat_id, new_username):
     session.query(User).filter(chat_id == chat_id).update({User.username: new_username})
+    session.commit()
 
 def edit_set_time(chat_id, new_set_time):
     session.query(User).filter(chat_id == chat_id).update({User.set_time: new_set_time})
+    session.commit()
         

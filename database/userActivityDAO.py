@@ -13,6 +13,8 @@ def insert_user_activity(user,activity,score, reflection):
 
 def edit_user_activity_score(user,activity,new_score):
     session.query(UserActivity).filter(UserActivity.user == user, UserActivity.activity == activity).update({UserActivity.score: new_score})
-
+    session.commit()
+    
 def edit_user_activity_reflection(user,activity,new_reflection):
     session.query(UserActivity).filter(UserActivity.user == user, UserActivity.activity == activity).update({UserActivity.reflection: new_reflection})
+    session.commit()
