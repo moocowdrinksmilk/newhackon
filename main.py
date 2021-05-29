@@ -1,10 +1,11 @@
 import telegram
+import config
 
-bot = telegram.Bot(token='1818728332:AAHth8z7BIa3sVcjIvmgeaVn9kFBoMIzBQs') #Replace TOKEN with your token string
+bot = telegram.Bot(token=config.TOKEN) #Replace TOKEN with your token string
 # print(bot.get_me())
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-updater = Updater(token='1818728332:AAHth8z7BIa3sVcjIvmgeaVn9kFBoMIzBQs', use_context=True) #Replace TOKEN with your token string
+updater = Updater(token=config.TOKEN, use_context=True)
 dispatcher = updater.dispatcher
 
 
