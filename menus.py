@@ -9,7 +9,6 @@ from database import userDAO
 
 CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE, CHOOSING_START = range(7)
 
-
 start_keyboard = [
     ['Help!', 'Set TRYVE time'],
     ['Stop receiving suggestions'],
