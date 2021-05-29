@@ -1,6 +1,7 @@
 import logging
 import config
 from typing import Dict
+import pprint
 
 from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
 from telegram.ext import (
@@ -22,7 +23,9 @@ settime_keyboard = [
 settime_markup = ReplyKeyboardMarkup(settime_keyboard, one_time_keyboard=True)
 
 def settime(update: Update, context: CallbackContext) -> int:
+
     """Start the conversation and ask user for input."""
+    user_id = update.message.from.id
     update.message.reply_text(
         "Hi! Welcome to TRYVE. What time would you like to TRYVE?",
         reply_markup=settime_markup,
