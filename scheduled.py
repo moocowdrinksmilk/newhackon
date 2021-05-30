@@ -7,7 +7,7 @@ import datetime
 from database.database import Activity, User
 from database import activityDAO, userDAO, userActivityDAO
 
-bot = telegram.Bot(token=config.TOKEN) 
+# bot = telegram.Bot(token=config.TOKEN) 
 
 
 def user_has_done_before(user: User, activity: Activity): # has user done activity before?
