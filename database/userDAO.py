@@ -1,5 +1,5 @@
-from sessionStart import session
-from database import engine, User
+from database.sessionStart import session
+from database.database import engine, User
 
 def get_user(chat_id):
     return session.query(User).get(chat_id)
