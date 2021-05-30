@@ -1,5 +1,5 @@
-from database.sessionStart import session
-from database.database import engine, Activity
+from sessionStart import session
+from database import engine, Activity
 
 
 def get_activity_by_id(id):
