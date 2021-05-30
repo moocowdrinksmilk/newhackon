@@ -1,15 +1,14 @@
 import logging
+
+from sqlalchemy.sql.functions import user
 import config
 from typing import Dict
 import pprint
-<<<<<<< HEAD
 import datetime
-<<<<<<< HEAD
 from database import userDAO
-=======
->>>>>>> 5691227 (Add user_id)
-=======
->>>>>>> ed9b88e (Add read user_id)
+import scheduled
+
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
 from telegram.ext import (
@@ -29,6 +28,10 @@ settime_keyboard = [
 ]
 
 settime_markup = ReplyKeyboardMarkup(settime_keyboard, one_time_keyboard=True)
+
+sched = BackgroundScheduler()
+    
+sched.start()
 
 def settime(update: Update, context: CallbackContext) -> int:
 
@@ -68,6 +71,7 @@ def received_time(update: Update, context: CallbackContext) -> int:
     time = update.message.text
 
     parse_time =  datetime.datetime.strptime(time, '%H:%M')
+    job = sched.add_job(scheduled.send_scheduled_message(user_id),'cron',hour=12, minute=30)
 
     print(parse_time)
 

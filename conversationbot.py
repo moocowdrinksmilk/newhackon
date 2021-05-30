@@ -37,7 +37,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE, CHOOSING_START = range(7)
+CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE, CHOOSING_START, PROMPT = range(8)
 
 def main() -> None:
     """Run the bot."""
@@ -98,6 +98,11 @@ def main() -> None:
                 ),
                 MessageHandler(
                     Filters.regex('^Stop receiving suggestions$'), menus.stop
+                )
+            ],
+            PROMPT: [
+                MessageHandler(
+                    Filters.regex('^Record Prompt'), misc.record_prompt
                 )
             ]
         },
