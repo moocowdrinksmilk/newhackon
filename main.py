@@ -1,6 +1,7 @@
 import telegram
 from telegram.utils.helpers import effective_message_type
 import config
+import misc
 
 bot = telegram.Bot(token=config.TOKEN) #Replace TOKEN with your token string
 # print(bot.get_me())

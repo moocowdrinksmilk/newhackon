@@ -64,21 +64,3 @@ def duration_choice(update: Update, context: CallbackContext) -> int:
 
     return TIME_CHOICE
   
-def received_time(update: Update, context: CallbackContext) -> int:
-    """Store info provided by user and ask for the next category."""
-    print(update)
-    user_id = update.message.chat.id
-    time = update.message.text
-
-    parse_time =  datetime.datetime.strptime(time, '%H:%M')
-    job = sched.add_job(scheduled.send_scheduled_message(user_id),'cron',hour=12, minute=30)
-
-    print(parse_time)
-
-    userDAO.edit_set_time(user_id, parse_time)
-
-    update.message.reply_text(
-        f"Neat! We will suggest the activities at {parse_time.time()}")
-
-    
-    return ConversationHandler.END

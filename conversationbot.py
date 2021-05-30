@@ -19,6 +19,10 @@ from typing import Dict
 import registration
 import times
 import menus
+import misc
+import datetime
+import scheduled
+from database import userDAO
 
 from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
 from telegram.ext import (
@@ -30,6 +34,8 @@ from telegram.ext import (
     CallbackContext,
 )
 
+from apscheduler.schedulers.background import BackgroundScheduler
+
 # Enable logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -38,6 +44,29 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE, CHOOSING_START, PROMPT = range(8)
+
+sched = BackgroundScheduler()
+    
+sched.start()
+
+def received_time(update: Update, context: CallbackContext) -> int:
+    """Store info provided by user and ask for the next category."""
+    print(update)
+    user_id = update.message.chat.id
+    time = update.message.text
+
+    parse_time =  datetime.datetime.strptime(time, '%H:%M')
+    job = sched.add_job(scheduled.send_scheduled_activity, 'cron', [update, context],hour=parse_time.hour, minute=parse_time.minute)
+
+    print(parse_time)
+
+    userDAO.edit_set_time(user_id, parse_time)
+
+    update.message.reply_text(
+        f"Neat! We will suggest the activities at {parse_time.time()}")
+
+    
+    return ConversationHandler.END
 
 def main() -> None:
     """Run the bot."""
@@ -81,12 +110,12 @@ def main() -> None:
             ],
             TIME_CHOICE: [
                 MessageHandler(
-                    Filters.text & ~(Filters.command | Filters.regex('^Done$')), times.received_time
+                    Filters.text & ~(Filters.command | Filters.regex('^Done$')), received_time
                 )
             ],
             TIME_DONE: [
                 MessageHandler(
-                  Filters.regex('^Done$'), times.received_time
+                  Filters.regex('^Done$'), received_time
                 )
             ],
             CHOOSING_START: [

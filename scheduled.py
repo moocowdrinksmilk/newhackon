@@ -7,6 +7,16 @@ import datetime
 from database.database import Activity, User
 from database import activityDAO, userDAO, userActivityDAO
 
+from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
+from telegram.ext import (
+    Updater,
+    CommandHandler,
+    MessageHandler,
+    Filters,
+    ConversationHandler,
+    CallbackContext,
+)
+
 # bot = telegram.Bot(token=config.TOKEN) 
 
 
@@ -17,11 +27,11 @@ def user_has_done_before(user: User, activity: Activity): # has user done activi
     return False
 
 
-def send_activity(bot, user: User, activity: Activity):
+def send_activity(update, user: User, activity: Activity):
     print(user.chat_id)
     print(user)
     print(activity.title)
-    bot.sendMessage(chat_id=user.chat_id, text="TRYVE ACTIVITIY OF THE DAY! \n\n"
+    update.message.reply_text(text="TRYVE ACTIVITIY OF THE DAY! \n\n"
                                                 + activity.title + "\n" + activity.content)
 
 
@@ -49,11 +59,13 @@ def find_new_activity(user: User):
             return activity
             
     
-def send_scheduled_activity(bot, user:User):
+def send_scheduled_activity(update: Update, context: CallbackContext) -> int:
+    user_id = update.message.chat.id
+    user = userDAO.get_user(user_id)
     activity = find_new_activity(user=user)
     if activity is not None:
         print("ACTIVITY FOUND")
-        send_activity(bot=bot, user=user, activity=activity)
+        send_activity(update, user=user, activity=activity)
         print("activity sent")
         return
     print("no activity found, so no message was sent")
