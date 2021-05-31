@@ -19,6 +19,10 @@ from typing import Dict
 import registration
 import times
 import menu
+from database import userDAO
+import datetime
+import scheduled
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
 from telegram.ext import (
@@ -37,9 +41,42 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE, CHOOSING_START = range(7)
+CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE, CHOOSING_START, PROMPT, RECEIVED_PROMPT = range(9)
 
-def main() -> None:
+
+sched = BackgroundScheduler()
+sched.start()
+
+def received_time(update: Update, context: CallbackContext) -> int:
+    """Store info provided by user and ask for the next category."""
+    print(update)
+    user_id = update.message.chat.id
+    time = update.message.text
+
+    parse_time =  datetime.datetime.strptime(time, '%H:%M')
+    job = sched.add_job(scheduled.send_scheduled_activity, 'cron', [update, context],hour=parse_time.hour, minute=parse_time.minute)
+    job = sched.add_job(scheduled.send_scheduled_prompt, 'cron', [update, context],hour=parse_time.hour, minute=parse_time.minute, second=15)
+    print(parse_time)
+
+    userDAO.edit_set_time(user_id, parse_time)
+
+    update.message.reply_text(
+        f"Neat! We will suggest the activities at {parse_time.time()}")
+
+    return RECEIVED_PROMPT
+
+def received_prompt(update: Update, context: CallbackContext) -> int:
+    user_id = update.message.chat.id
+    prompt = update.message.text
+    user = userDAO.get_user(user_id)
+
+
+    update.message.reply_text(
+            f"Neat! We see you at {user.set_time.time()} tomorrow")
+    
+    return ConversationHandler.END
+
+def main():
     """Run the bot."""
     # Create the Updater and pass it your bot's token.
     updater = Updater(config.TOKEN)
@@ -81,7 +118,7 @@ def main() -> None:
             ],
             TIME_CHOICE: [
                 MessageHandler(
-                    Filters.text & ~(Filters.command | Filters.regex('^Done$')), times.received_time
+                    Filters.text & ~(Filters.command | Filters.regex('^Done$')), received_time
                 )
             ],
             TIME_DONE: [
@@ -98,6 +135,11 @@ def main() -> None:
                 ),
                 MessageHandler(
                     Filters.regex('^Stop receiving suggestions$'), menu.stop
+                )
+            ], 
+            RECEIVED_PROMPT: [
+                MessageHandler(
+                    Filters.text & ~(Filters.command | Filters.regex('^Done$')), received_prompt
                 )
             ]
         },

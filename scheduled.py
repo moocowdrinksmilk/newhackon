@@ -6,6 +6,15 @@ import datetime
 
 from database.database import Activity, User
 from database import activityDAO, userDAO, userActivityDAO
+from telegram import ReplyKeyboardMarkup, Update
+from telegram.ext import (
+    Updater,
+    CommandHandler,
+    MessageHandler,
+    Filters,
+    ConversationHandler,
+    CallbackContext,
+)
 
 bot = telegram.Bot(token=config.TOKEN) 
 
@@ -17,19 +26,19 @@ def user_has_done_before(user: User, activity: Activity): # has user done activi
     return False
 
 
-def send_activity(bot, user: User, activity: Activity):
+def send_activity(update, user: User, activity: Activity):
     print(user.chat_id)
     print(user)
     print(activity.title)
-    bot.sendMessage(chat_id=user.chat_id, text="TRYVE ACTIVITIY OF THE DAY! \n\n"
+    update.message.reply_text(text="TRYVE ACTIVITIY OF THE DAY! \n\n"
                                                 + activity.title + "\n" + activity.content)
 
 
-def send_prompt(bot, user: User, activity: Activity):
+def send_prompt(update, user: User, activity: Activity):
     print(user.chat_id)
     print(user)
     print(activity.title)
-    bot.sendMessage(chat_id=user.chat_id, text="DAILY TRYVE REFLECTION! \n\n"
+    update.message.reply_text(text="DAILY TRYVE REFLECTION! \n\n"
                                                 + activity.prompt + "\n\nSomething to say? Tell us your thoughts below!" )
 
     #add user-activity relationship
@@ -49,21 +58,25 @@ def find_new_activity(user: User):
             return activity
             
     
-def send_scheduled_activity(bot, user:User):
+def send_scheduled_activity(update: Update, context: CallbackContext) -> int:
+    user_id = update.message.chat.id
+    user = userDAO.get_user(user_id)
     activity = find_new_activity(user=user)
     if activity is not None:
         print("ACTIVITY FOUND")
-        send_activity(bot=bot, user=user, activity=activity)
+        send_activity(update, user=user, activity=activity)
         print("activity sent")
         return
     print("no activity found, so no message was sent")
 
 
-def send_scheduled_prompt(bot, user:User):
+def send_scheduled_prompt(update: Update, context: CallbackContext) -> int:
+    user_id = update.message.chat.id
+    user = userDAO.get_user(user_id)
     activity = find_new_activity(user=user)
     if activity is not None:
         print("PROMPT FOUND")
-        send_prompt(bot=bot, user=user, activity=activity)
+        send_prompt(update, user=user, activity=activity)
         print("prompt sent")
         return
     print("no activity found, so no message was sent")

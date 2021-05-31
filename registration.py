@@ -12,7 +12,7 @@ from telegram.ext import (
     CallbackContext,
 )
 
-CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE = range(6)
+CHOOSING, TYPING_REPLY, TYPING_CHOICE, CHOOSING_TIME, TIME_DONE, TIME_CHOICE, CHOOSING_START, PROMPT, RECEIVED_PROMPT = range(9)
 
 register_keyboard = [
     ['Age', 'Favourite colour'],
@@ -30,7 +30,7 @@ def facts_to_str(user_data: Dict[str, str]) -> str:
 def register(update: Update, _: CallbackContext) -> int:
     """Start the conversation and ask user for input."""
     update.message.reply_text(
-        "Hi! Welcome to TRYVE. Let's know more about you."
+        text="Hi! Welcome to TRYVE. Let's know more about you."
         "Why don't you tell me something about yourself?",
         reply_markup=register_markup,
     )

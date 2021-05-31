@@ -1,6 +1,7 @@
 import logging
 import config
 from typing import Dict
+from database import userDAO
 
 from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
 from telegram.ext import (
@@ -22,20 +23,25 @@ settime_keyboard = [
 settime_markup = ReplyKeyboardMarkup(settime_keyboard, one_time_keyboard=True)
 
 def settime(update: Update, context: CallbackContext) -> int:
+    user = userDAO.get_user(update.message.chat.id)
     """Start the conversation and ask user for input."""
     update.message.reply_text(
-        "Hi! Welcome to TRYVE. What time would you like to TRYVE?",
-        reply_markup=settime_markup,
+        f"Hi {user.username}! Welcome to TRYVE. What time would you like to TRYVE? The duration is thirty minutes",
+        
     )
-
-    return CHOOSING_TIME
-
-def time_choice(update: Update, context: CallbackContext) -> int:
-    update.message.reply_text(f'What time?')
     text = update.message.text
     context.user_data['time'] = text
 
     return TIME_CHOICE
+
+    # return CHOOSING_TIME
+
+def time_choice(update: Update, context: CallbackContext) -> int:
+    update.message.reply_text(f'What time?')
+    # text = update.message.text
+    # context.user_data['time'] = text
+
+    # return TIME_CHOICE
 
 def duration_choice(update: Update, context: CallbackContext) -> int:
     update.message.reply_text('How long? The recommended duration is 25 minutes')
